@@ -23,7 +23,7 @@ function markAdjacent(table, row, col, deep, meta)
                 ads = ads + 1;
             end
         end
-        ads = ads + 0.4;
+        ads = ads + 0.2;
     end
 
 end

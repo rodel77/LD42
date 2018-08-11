@@ -7,7 +7,11 @@ math.randomseed(os.time());
 
 require "utils";
 require "puzzle_generator";
+require "menu";
 require "level1";
+require "level2";
+
+local state = Menu;
 
 function love.load()
     loadAssets();
@@ -19,20 +23,26 @@ end
 local keys = {};
 function love.draw()
     CScreen.apply();
-    Level1:draw();
-    CScreen.cease()
+    Menu:draw();
+    -- CScreen.cease()
 end
 
 function love.update(dt)
     mouseX, mouseY = CScreen.project(love.mouse.getPosition());
-    Level1:update(dt);
+    Menu:update(dt);
+
+    -- For some reason "setLooping" caused some problems
+    -- I never seen that... but I has to happend in a jam!
+    if not sounds.music_carnival:isPlaying() then
+        sounds.music_carnival:play();
+    end
 end
 
 function love.resize(width, height)
 	CScreen.update(width, height)
 end
 
-
+game_audio = 5;
 function love.keypressed(keycode)
     keys[keycode] = true;
 
@@ -48,7 +58,18 @@ function love.keypressed(keycode)
         loadAssets();
     end
 
-    Level1:keypressed(keys);
+    if keys["left"] then
+        game_audio = math.max(0, game_audio-1);
+        love.audio.setVolume(game_audio/10)
+    end
+    
+    if keys["right"] then
+        game_audio = math.min(10, game_audio+1);
+        love.audio.setVolume(game_audio/10)
+    end
+
+
+    Menu:keypressed(keys);
 end
 
 function love.keyreleased(keycode)
@@ -56,9 +77,9 @@ function love.keyreleased(keycode)
 end
 
 function love.mousepressed()
-    Level1:mousepressed();
+    Menu:mousepressed();
 end
 
 function love.mousereleased()
-    Level1:mousereleased();
+    Menu:mousereleased();
 end
