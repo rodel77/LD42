@@ -1,5 +1,6 @@
 return function()
     love.graphics.setDefaultFilter("nearest", "nearest");
+    love.graphics.setLineStyle("rough");
 
     images = {
         carnival_bg = love.graphics.newImage("assets/carnival.png"),
@@ -41,12 +42,6 @@ return function()
         "00cdf9",
     }
     
-    -- print(#edg64)
-
-    -- for i=1,200 do
-    --     print(i, edg64[(i-1)%#edg64+1])
-    -- end
-
 
     for i,v in ipairs(edg64) do
         edg64[i] = hex2rgb(v);

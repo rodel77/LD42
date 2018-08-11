@@ -24,6 +24,7 @@ function love.draw()
 end
 
 function love.update(dt)
+    mouseX, mouseY = CScreen.project(love.mouse.getPosition());
     Level1:update(dt);
 end
 
@@ -48,9 +49,16 @@ function love.keypressed(keycode)
     end
 
     Level1:keypressed(keys);
-    -- print(keycode)
 end
 
 function love.keyreleased(keycode)
     keys[keycode] = nil;
+end
+
+function love.mousepressed()
+    Level1:mousepressed();
+end
+
+function love.mousereleased()
+    Level1:mousereleased();
 end

@@ -1,1 +1,106 @@
-local a={}local b,c,d=800,600,true;local e,f,g,h=800,600,1.0,1.0;local i,j,k,l=0.0,0.0,800,600;local m,n,o,p=0,0,0,255;function a.init(q,r,s)b=q or 800;c=r or 600;d=s or true;i=0;j=0;a.update(love.graphics.getWidth(),love.graphics.getHeight())end;function a.cease()local pr,pg,pb,pa=love.graphics.getColor()love.graphics.setColor(m,n,o,p)love.graphics.scale(h,h)if i~=0 then love.graphics.rectangle("fill",-i,0,i,l)love.graphics.rectangle("fill",e,0,i,l)elseif j~=0 then love.graphics.rectangle("fill",0,-j,k,j)love.graphics.rectangle("fill",0,f,k,j)end;love.graphics.setColor(pr,pg,pb,pa)end;function a.apply()if d then love.graphics.translate(i,j)end;love.graphics.scale(g,g)end;function a.update(t,u)local v=t/b;local w=u/c;g=math.min(v,w)h=1/g;if d and g==v then i=0;j=u/2-c*g/2 elseif d and g==w then j=0;i=t/2-b*g/2 end;k=t;l=u;e=b*g;f=c*g end;function a.setColor(x,y,z,A)m=x;n=y;o=z;p=A end;return a
+--[[
+CScreen v1.3 by CodeNMore
+A simple way to make resolution-independent Love2D games
+Tested for LOVE 0.10.1
+See: https://github.com/CodeNMore/CScreen
+
+Zlib License:
+Copyright (c) 2016 CodeNMore
+
+This software is provided 'as-is', without any express or implied warranty.
+In no event will the authors be held liable for any damages arising from
+the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+claim that you wrote the original software. If you use this software in
+a product, an acknowledgment in the product documentation would be appreciated
+but is not required.
+
+2. Altered source versions must be plainly marked as such, and must not be
+misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source distribution.
+
+--]]
+
+local CScreen = {}
+local rx, ry, ctr = 800, 600, true
+local rxv, ryv, fsv, fsvr = 800, 600, 1.0, 1.0
+local tx, ty, rwf, rhf = 0, 0, 800, 600
+local cr, cg, cb, ca = 0, 0, 0, 255
+
+-- Initializes CScreen with the initial size values
+function CScreen.init(tw, th, cntr)
+	rx = tw or 800
+	ry = th or 600
+	ctr = cntr or false
+	CScreen.update(love.graphics.getWidth(), love.graphics.getHeight())
+end
+
+-- Draws letterbox borders
+function CScreen.cease()
+	if ctr then
+		local pr, pg, pb, pa = love.graphics.getColor()
+		love.graphics.setColor(cr, cg, cb, ca)
+		love.graphics.scale(fsvr, fsvr)
+
+		if tx ~= 0 then
+			love.graphics.rectangle("fill", -tx, 0, tx, rhf)
+			love.graphics.rectangle("fill", rxv, 0, tx, rhf)
+		elseif ty ~= 0 then
+			love.graphics.rectangle("fill", 0, -ty, rwf, ty)
+			love.graphics.rectangle("fill", 0, ryv, rwf, ty)
+		end
+
+		love.graphics.setColor(pr, pg, pb, pa)
+	end
+end
+
+-- Scales and centers all graphics properly
+function CScreen.apply()
+	if ctr then
+		love.graphics.translate(tx, ty)
+	end
+	love.graphics.scale(fsv, fsv)
+end
+
+-- Updates CScreen when the window size changes
+function CScreen.update(w, h)
+	local sx = w / rx
+	local sy = h / ry
+	fsv = math.min(sx, sy)
+	fsvr = 1 / fsv
+	-- Centering
+	if ctr and fsv == sx then -- Vertically
+		tx = 0
+		ty = (h / 2) - (ry * fsv / 2)
+	elseif ctr and fsv == sy then -- Horizontally
+		ty = 0
+		tx = (w / 2) - (rx * fsv / 2)
+	end
+	-- Variable sets
+	rwf = w
+	rhf = h
+	rxv = rx * fsv
+	ryv = ry * fsv
+end
+
+-- Convert from window coordinates to target coordinates
+function CScreen.project(x, y)
+	return math.floor((x - tx) / fsv), math.floor((y - ty) / fsv)
+end
+
+-- Change letterbox color
+function CScreen.setColor(r, g, b, a)
+	cr = r
+	cg = g
+	cb = b
+	ca = a
+end
+
+-- Return the table for use
+return CScreen
