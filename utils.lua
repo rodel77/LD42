@@ -94,6 +94,16 @@ function add(table, subtable, row, col)
     end
 end
 
+function deleteColor(table, color)
+    for i,row in ipairs(table) do
+        for v,col in ipairs(row) do
+            if col==color then
+                table[i][v] = 0;
+            end
+        end
+    end
+end
+
 function shallowcopy(orig)
     local orig_type = type(orig)
     local copy

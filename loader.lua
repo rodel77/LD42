@@ -23,6 +23,7 @@ return function()
         finish         = love.audio.newSource("assets/finish.wav", "static"),
         bip            = love.audio.newSource("assets/bip.wav", "static"),
         pick           = love.audio.newSource("assets/pick.wav", "static"),
+        remove         = love.audio.newSource("assets/remove.wav", "static"),
     }
     -- sounds.music_carnival:setLooping(true)
     sounds.music_carnival:play();

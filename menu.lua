@@ -69,7 +69,7 @@ function Menu:draw()
     love.graphics.print(volumeol, 256/2, 141, 0, 1, 1, fonts.thicket:getWidth("Volume: ||||||||||")/2, font_height.thicket/2)
     love.graphics.print(volume, 256/2, 140, 0, 1, 1, fonts.thicket:getWidth("Volume: ||||||||||")/2, font_height.thicket/2)
 
-    local legend = "Created in 48 hours\nfor ludum dare 42\n\nBy @therodel77";
+    local legend = "Created in 48 hours\nfor ludum dare 42\n\nBy @therodel77 (1.0)";
     local y = 256 - font_height.thicket*4 - 2;
     outlineText(legend, 2, y-1, 0, 1, 1, 0, 0, 0, 0, 1);
     outlineText(legend, 2, y, 0, 1, 1, 0, 0, 0, 0, 1);

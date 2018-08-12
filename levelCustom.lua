@@ -4,6 +4,7 @@ LevelCustom = {
     solved = {},
     currentColor = 1,
     pieces = {},
+    oldPieces = {},
     grab = 0,
     hover = 0,
     canplace = false,
@@ -21,6 +22,7 @@ LevelCustom = {
 function LevelCustom:reset()
     self.currentColor = 1;
     self.pieces = {};
+    self.oldPieces = {};
     self.grab = 0;
     self.hover = 0;
     self.canplace = false;
@@ -177,7 +179,7 @@ function LevelCustom:draw()
         white()
     end
     -- love.graphics.rectangle("fill", 64, 64, self.specs.size*self.specs.tile_size, self.specs.size*self.specs.tile_size)
-    local help = "Solved state: \"shift\"\nRestart: \"r\"\nLevel Selection: \"esc\"\n(You can scroll the pieces)";
+    local help = "Solved state: \"shift\"\nNew Game: \"r\"\nLevel Selection: \"esc\"\n(You can scroll the pieces)";
     outlineText(help, 64, 2, 0, 1, 1, 0, 0, 0, 0, 1)
     outlineText(help, 64, 3, 0, 1, 1, 0, 0, 0, 0, 1)
     -- outlineText("Restart: \"r\"", 64, 4+font_height.thicket, 0, 1, 1, 0, 0, 0, 0, 1)
@@ -253,6 +255,7 @@ function LevelCustom:start()
     
             self.currentColor = self.currentColor + 1;
         else
+            self.oldPieces = shallowcopy(self.pieces);
             self.solved = self.map;
             self.map = matrixRange(self.specs.size);
             return;
@@ -269,6 +272,8 @@ function LevelCustom:keypressed(keys)
         self.pieces = {};
         self.map = matrixRange(self.specs.size);
         self:start();
+        sounds.remove:stop();
+        sounds.remove:play();
     end
 
     if keys["s"] then
@@ -285,12 +290,28 @@ end
 function LevelCustom:mousepressed()
     if self.hover>0 then
         self.grab = self.hover;
+        sounds.pick:stop();
         sounds.pick:play();
-    end
-
-    if self.back_hover then
+    elseif self.back_hover then
         self:reset();
         state = Levels;
+        sounds.ok:stop();
+        sounds.ok:play();
+    else
+        local y = (math.floor(mouseY/self.specs.tile_size)*self.specs.tile_size-64)/self.specs.tile_size+1;
+        local x = (math.floor(mouseX/self.specs.tile_size)*self.specs.tile_size-64)/self.specs.tile_size+1;
+        if x>0 and y>0 and y<=#self.map and x<=#self.map[y] and self.map[y][x]~=0 then
+            for i,piece in ipairs(self.oldPieces) do
+                if piece[1]==self.map[y][x] then
+                    self.pieces[#self.pieces+1] = piece;
+                    break;
+                end
+            end
+
+            deleteColor(self.map, self.map[y][x]);
+            sounds.remove:stop();
+            sounds.remove:play();
+        end
     end
 end
 
