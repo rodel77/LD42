@@ -133,3 +133,23 @@ function outlineTextf(text, x, y, maxwidth, align, r, sx, sy, ox, oy, kx, ky, of
     love.graphics.printf(text, x, y-off, maxwidth, align, r, sx, sy, ox, oy, kx, ky);
     love.graphics.setColor(red, green, blue, alpha);
 end
+
+function matrixRange(s)
+    local table = {};
+    for i=1,s do
+        local row = {};
+        for j=1,s do
+            row[#row+1] = 0;
+        end
+        table[#table+1] = row;
+    end
+    return table;
+end
+
+function darken(color)
+    local copy = shallowcopy(color);
+    for i,v in ipairs(copy) do
+        copy[i] = v * 0.7;
+    end
+    return copy;
+end

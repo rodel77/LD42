@@ -8,28 +8,26 @@ math.randomseed(os.time());
 require "utils";
 require "puzzle_generator";
 require "menu";
-require "level1";
-require "level2";
+require "levelCustom";
+require "levels";
 
-local state = Menu;
+state = Menu;
 
 function love.load()
     loadAssets();
     CScreen.init(256, 256, true);
-    -- love.window.setMode(512, 512);
-    -- CScreen.update(512, 512);
 end
 
-local keys = {};
+keys_pressing = {};
 function love.draw()
     CScreen.apply();
-    Menu:draw();
-    -- CScreen.cease()
+    state:draw();
+    CScreen.cease()
 end
 
 function love.update(dt)
     mouseX, mouseY = CScreen.project(love.mouse.getPosition());
-    Menu:update(dt);
+    state:update(dt);
 
     -- For some reason "setLooping" caused some problems
     -- I never seen that... but I has to happend in a jam!
@@ -44,42 +42,35 @@ end
 
 game_audio = 5;
 function love.keypressed(keycode)
-    keys[keycode] = true;
+    keys_pressing[keycode] = true;
 
-    if keys["escape"] then
-        love.event.quit();
+    if keys_pressing["lalt"] and keys_pressing["return"] then
+        love.window.setFullscreen(not love.window.getFullscreen());
+        return;
     end
 
-    if keys["lalt"] and keys["return"] then
-        love.window.setFullscreen(true);
-    end
-
-    if keys["lctrl"] and keys["f3"] then
+    if keys_pressing["lctrl"] and keys_pressing["f3"] then
         loadAssets();
+        return;
     end
 
-    if keys["left"] then
-        game_audio = math.max(0, game_audio-1);
-        love.audio.setVolume(game_audio/10)
-    end
-    
-    if keys["right"] then
-        game_audio = math.min(10, game_audio+1);
-        love.audio.setVolume(game_audio/10)
-    end
-
-
-    Menu:keypressed(keys);
+    state:keypressed(keys_pressing);
 end
 
 function love.keyreleased(keycode)
-    keys[keycode] = nil;
+    keys_pressing[keycode] = nil;
 end
 
 function love.mousepressed()
-    Menu:mousepressed();
+    state:mousepressed();
 end
 
 function love.mousereleased()
-    Menu:mousereleased();
+    state:mousereleased();
+end
+
+function love.wheelmoved(x, y)
+    if state.wheelmoved then
+        state:wheelmoved(x, y);
+    end
 end

@@ -17,6 +17,12 @@ return function()
     sounds = {
         music_carnival = love.audio.newSource("assets/carnival.ogg", "stream"),
         blip           = love.audio.newSource("assets/blip.wav", "static"),
+        ok             = love.audio.newSource("assets/ok.wav", "static"),
+        no             = love.audio.newSource("assets/no.wav", "static"),
+        place          = love.audio.newSource("assets/place.wav", "static"),
+        finish         = love.audio.newSource("assets/finish.wav", "static"),
+        bip            = love.audio.newSource("assets/bip.wav", "static"),
+        pick           = love.audio.newSource("assets/pick.wav", "static"),
     }
     -- sounds.music_carnival:setLooping(true)
     sounds.music_carnival:play();

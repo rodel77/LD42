@@ -5,8 +5,8 @@ Menu = {
 
 function Menu:draw()
 
-    for x=0,8 do
-        for y=-1,7 do
+    for x=-10,10 do
+        for y=-1,8 do
             love.graphics.draw(images.menu_bg, x*48-self.bg_wrap, y*48+self.bg_wrap, 0, 6, 6);
         end
     end
@@ -18,13 +18,13 @@ function Menu:draw()
     -- love.graphics.print("Spatium", 256/2+2, 30, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
     -- love.graphics.print("Spatium", 256/2+2, 32, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
     -- love.graphics.print("Spatium", 256/2-2, 32, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
-    outlineText("Spatium", 256/2, 30, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2, 0, 0, 2);
-    outlineText("Spatium", 256/2, 32, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2, 0, 0, 2);
+    outlineText("Spatium", 256/2, 40, 0, 2, 2+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2, 0, 0, 2);
+    outlineText("Spatium", 256/2, 42, 0, 2, 2+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2, 0, 0, 2);
     love.graphics.setColor(unpack(edg64[(math.floor(love.timer.getTime()+1)-1)%#edg64+1]));
-    love.graphics.print("Spatium", 256/2, 30, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
+    love.graphics.print("Spatium", 256/2, 40, 0, 2, 2+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
     love.graphics.setColor(unpack(edg64[(math.floor(love.timer.getTime())-1)%#edg64+1]));
-    love.graphics.print("Spatium", 256/2, 32, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
-    love.graphics.print("Spatium", 256/2, 32, 0, 1, 1+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
+    love.graphics.print("Spatium", 256/2, 42, 0, 2, 2+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
+    love.graphics.print("Spatium", 256/2, 42, 0, 2, 2+map(math.sin(love.timer.getTime()), -1, 1, 0, .5), fonts.crates:getWidth("Spatium")/2, font_height.crates/2);
     white();
     love.graphics.setFont(fonts.thicket)
     self:drawButton("Play", 100, 1);
@@ -117,11 +117,27 @@ function Menu:keypressed(keys)
     
     if keys["return"] then
         if self.selected==1 then
+            Levels.bg_wrap = self.bg_wrap;
+            state = Levels;
         else
             love.event.quit();
         end
-        sounds.blip:stop();
-        sounds.blip:play();
+        sounds.ok:stop();
+        sounds.ok:play();
+    end
+
+    if keys["left"] then
+        game_audio = math.max(0, game_audio-1);
+        love.audio.setVolume(game_audio/10)
+    end
+    
+    if keys["right"] then
+        game_audio = math.min(10, game_audio+1);
+        love.audio.setVolume(game_audio/10)
+    end
+
+    if keys["escape"] then
+        love.event.quit();
     end
 end
 
