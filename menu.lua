@@ -94,7 +94,7 @@ function Menu:drawButton(text, y, id)
 end
 
 function Menu:update(dt)
-    self.bg_wrap = self.bg_wrap + 0.3;
+    self.bg_wrap = self.bg_wrap + (15 * dt);
 
     if self.bg_wrap>=48 then
         self.bg_wrap = 0;
